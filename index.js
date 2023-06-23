@@ -33,9 +33,8 @@ mongoose.connect(CONNECTION_URI, {useNewUrlParser : true, useUnifiedTopology : t
     .catch((err) => console.log(err.message))
 
 
-
 app.use('/', (req, res)=>{
-    res.send("API is Working")
+    res.send("API is Working!!")
 })  
 app.use('/posts', postRoutes)
 app.use('/user', userRoutes)
