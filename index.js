@@ -25,16 +25,17 @@ const PORT = process.env.PORT
 //     )
 //   }
 
-const CONNECTION_URI = process.env.CONNECTION_URI
+//const CONNECTION_URI = process.env.CONNECTION_URI
 
-//const CONNECTION_URI = 'mongodb://127.0.0.1:27017/PepperMint'
+const CONNECTION_URI = 'mongodb://127.0.0.1:27017/PepperMint'
 mongoose.connect(CONNECTION_URI, {useNewUrlParser : true, useUnifiedTopology : true})
     .then( ()=> app.listen(PORT, ()=> console.log(`Server running on ${PORT}`)))
     .catch((err) => console.log(err.message))
 
+ 
+app.use('/posts', postRoutes)
+app.use('/user', userRoutes)
 
 app.use('/', (req, res)=>{
     res.send("API is Working!!")
-})  
-app.use('/posts', postRoutes)
-app.use('/user', userRoutes)
+}) 
