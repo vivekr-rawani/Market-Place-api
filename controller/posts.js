@@ -10,7 +10,7 @@ export const getPosts = async (req, res)=>{
         const startIndex = (Number(page) - 1) * LIMIT
         const totalPosts = await PostMessage.countDocuments({})
         
-        const posts = await PostMessage.find().limit(LIMIT).skip(startIndex)
+        const posts = await PostMessage.find().sort( {updatedAt : -1}).limit(LIMIT).skip(startIndex)
 
         res.status(200).json({posts, currentPage : Number(page), numberOfPages : Math.ceil(totalPosts/LIMIT) })
     }
