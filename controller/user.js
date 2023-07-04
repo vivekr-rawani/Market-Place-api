@@ -35,14 +35,42 @@ export const signup = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    const result = await UserModel.create({ email, password: hashedPassword, name: `${firstName} ${lastName}`, profilePicture  });
+    const result = await UserModel.create({ email, password: hashedPassword, name: `${firstName} ${lastName}`, profilePicture });
 
-    const token = jwt.sign( { email: result.email, id: result._id }, secret );
+    const token = jwt.sign({ email: result.email, id: result._id }, secret);
 
     res.status(201).json({ result, token });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
-    
+
     console.log(error);
   }
 };
+
+export const googleSignUp = async (req, res) => {
+  const { email,  name,  picture } = req.body;
+
+  try {
+    const oldUser = await UserModel.findOne({ email });
+
+    if (oldUser) {
+      const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret);
+
+      res.status(200).json({ result: oldUser, token });
+    } else {
+      const result = await UserModel.create({ email, profilePicture : picture, name });
+
+      const token = jwt.sign({ email: result.email, id: result._id }, secret);
+
+
+      res.status(201).json({ result, token });
+    }
+
+
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong" });
+
+    console.log(error);
+  }
+};
+
