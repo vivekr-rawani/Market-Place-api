@@ -36,6 +36,7 @@ export const getPost = async (req, res) => {
     const { id } = req.params;
 
     try {
+        if(!Mongoose.Types.ObjectId.isValid(id)) res.status(404).send("No post with given id")
         const post = await PostMessage.findById(id);
         
         res.status(200).json(post);
