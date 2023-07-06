@@ -11,6 +11,7 @@ app.use(cors())
 
 import postRoutes from './routes/posts.js'
 import userRoutes from './routes/user.js'
+import { post } from './routes/posts.js'
 
 const PORT = process.env.PORT 
 //const CONNECTION_URI = 'mongodb://127.0.0.1:27017/PepperMint'
@@ -21,8 +22,9 @@ mongoose.connect(CONNECTION_URI, {useNewUrlParser : true, useUnifiedTopology : t
 
  
 app.use('/posts', postRoutes)
+app.use('/post', post)
 app.use('/user', userRoutes)
 
-app.use('/', (req, res)=>{
+app.use('/home', (req, res)=>{
     res.sendFile(process.cwd() + '/index.html')
 }) 
