@@ -2,7 +2,10 @@ import mongoose from "mongoose"
 
 const postSchema = mongoose.Schema({
     message: String,
-    creator: String,
+    creator: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Creator'
+    }, 
     name : String,
     userProfilePicture :String,
     tags: [String],

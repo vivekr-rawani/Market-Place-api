@@ -1,5 +1,6 @@
 import  Mongoose  from 'mongoose'
 import PostMessage from '../models/postMessage.js'
+import User from '../models/userModel.js'
 
 
 export const getPosts = async (req, res)=>{
@@ -100,4 +101,15 @@ export const likePost = async(req, res) => {
 
     const updatedPost = await PostMessage.findByIdAndUpdate(id, post, {new : true})
     res.send(updatedPost)
+}
+
+export const getUserPosts = async(req, res)=>{
+    const {user} = req.query;
+    try {
+        if(!Mongoose.Types.ObjectId.isValid(user)) res.status(404).send("No post with given id")
+        const posts = await PostMessage.find({creator : user}).exec()
+        res.send(posts)
+    } catch (error) {
+        res.status(404).json({message : error})
+    }
 }
