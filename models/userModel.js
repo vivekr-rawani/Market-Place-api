@@ -6,7 +6,10 @@ const userSchema = mongoose.Schema({
   password: { type: String },
   id: { type: String },
   profilePicture : String,
-  
+  email_verified:{type : Boolean, default : false},
+  country : String,
+  follower : String,
+  following : String
 });
 
 export default mongoose.model("User", userSchema);

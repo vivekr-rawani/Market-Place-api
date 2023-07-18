@@ -11,11 +11,9 @@ export const signup = async (req, res) => {
   const { email, password, firstName, lastName, profilePicture } = req.body;
   try {
     const oldUser = await UserModel.findOne({ email });
-
     if (oldUser) return res.status(400).json({ message: "User already exists" });
-
     const hashedPassword = await bcrypt.hash(password, 12);
-
+    console.log(hashedPassword);
     const result = await UserModel.create({ email, password: hashedPassword, name: `${firstName} ${lastName}`, profilePicture });
     const token = jwt.sign({ email: result.email, id: result._id }, secret);
     res.status(201).json({ result, token });
@@ -46,7 +44,7 @@ export const googleAuth = async (req, res) => {
     const response = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
       headers: { "Authorization": `Bearer ${googleAccessToken}` }
     });
-    const { given_name: firstName, family_name: lastName, email, picture } = response.data;
+    const { given_name: firstName, family_name: lastName, email, picture, email_verified } = response.data;
     const existingUser = await UserModel.findOne({ email })
 
     if (existingUser) {
@@ -54,7 +52,7 @@ export const googleAuth = async (req, res) => {
       const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, secret)
       res.status(200).json({ result: existingUser, token })
     } else {
-      const result = await UserModel.create({ email, name: `${firstName} ${lastName}`, profilePicture: picture })
+      const result = await UserModel.create({ email, name: `${firstName} ${lastName}`, profilePicture: picture, email_verified })
       const token = jwt.sign({ email: result.email, id: result._id }, secret);
       res.status(201).json({ result, token });
     }
@@ -63,16 +61,3 @@ export const googleAuth = async (req, res) => {
   }
 }
 
-  // google auth
-//https://lh3.googleusercontent.com/a/AAcHTteY93ACSa41lc1WRzryOj6SoXlrwA8x3to_Bw2vKitmKw=s96-c
-//https://lh3.googleusercontent.com/a/AAcHTtcOcfs1dL0WVy45ZGLfCPaRxz--BqwFwBeV_Ao42tmD-Ys=s96-c
-
-
-//   if (!existingUser) return res.status(404).json({ message: "User don't exist!" })
-
-// } catch (error) {
-//   res.status(400).json({ message: "Invalid access token!" })
-// }
- 
-
-// }
